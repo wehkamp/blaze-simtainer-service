@@ -1,0 +1,33 @@
+import os
+
+from blazelib import log
+
+from blazecli.project.project import build_in_docker
+from blazecli.util.naming import image_name
+from blazecli.util.docker import environment_params
+
+build_image = "wehkamp/build-aspnetcore:3.1"
+name = 'Blaze.SimTainer.Service.Api'
+
+log.info("About to build .NET application '%s'" % name)
+
+if not os.path.exists("./publish"):
+   os.mkdir("./publish")
+
+environment = [
+   "BLAZE_ARTIFACTORY_HOST",
+   "BLAZE_ARTIFACTORY_PASSWORD",
+   "BLAZE_ARTIFACTORY_USER",
+   "BUILD_NUMBER",
+   "GIT_BRANCH",
+   "GIT_LOCAL_BRANCH",
+   "GIT_COMMIT",
+   "GIT_AUTHOR_NAME",
+   "GIT_AUTHOR_EMAIL",
+   "GIT_URL"
+]
+
+environment = environment_params(environment)
+
+build_in_docker(image_name(), build_image,
+               ["-e", "DOTNET_APPLICATION_NAME=%s" % name] + environment)
