@@ -39,12 +39,15 @@ namespace Blaze.SimTainer.Service.Api.Services
 		private NeighbourhoodDto GenerateNeighbourhoodDto(IApplication application)
 		{
 			List<LayerValueDto> layerValues = new List<LayerValueDto>();
+			// Add the CPU Layer
 			LayerValueDto cpuLayer = new LayerValueDto
 				{LayerType = LayerTypeEnum.cpuLayer.ToString(), MinValue = 0, MaxValue = 100};
+			// Add the memory layer
 			LayerValueDto memoryLayer = new LayerValueDto
 				{LayerType = LayerTypeEnum.memoryLayer.ToString(), MinValue = 0, MaxValue = application.Memory};
 			try
 			{
+				// Try to add the failed requests layer. Not every container provides network metrics
 				LayerValueDto failedRequestsLayer = new LayerValueDto
 				{
 					LayerType = LayerTypeEnum.failedRequestsLayer.ToString(),
@@ -62,17 +65,21 @@ namespace Blaze.SimTainer.Service.Api.Services
 			{
 				// Failed requests do not exists, so we skip this layer value
 			}
-
+			// Add the layers to the list
 			layerValues.Add(cpuLayer);
 			layerValues.Add(memoryLayer);
+			
+			// Create a list for the visualized objects that we are going to add
 			List<IVisualizedObjectDto> objects = new List<IVisualizedObjectDto>();
 
 			foreach (IInstance instance in application.Instances)
 			{
+				// Every instance is a building, so generate a building DTO
 				IVisualizedObjectDto building = GenerateBuildingDto(application, instance, false);
 				objects.Add(building);
 				if (instance.Metrics != null)
 				{
+					// If we have metrics, try to generate a vehicle DTO (network metrics)
 					IVisualizedObjectDto vehicleDto =
 						GenerateVehicleDto(instance.Identifier, instance.Metrics.Values);
 					if (vehicleDto != null)

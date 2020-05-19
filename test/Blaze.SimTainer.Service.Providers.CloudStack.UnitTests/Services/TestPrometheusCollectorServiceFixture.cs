@@ -16,7 +16,6 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 {
 	public class TestPrometheusCollectorServiceFixture
 	{
-		private const string TestServiceName = "blaze-product-identifier-service";
 		private const string TestServiceJob = "product-identifier";
 
 		private readonly MesosFactory _mesosFactory;
@@ -124,9 +123,8 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 			PrometheusCollector mesosCollector =
 				new PrometheusCollector("http://localhost", new HttpClient(mockMessageHandler.Object));
 			const string serviceName = "test-service";
-			const string serviceIdentifier = "test-service.mesos123";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
-			IApplication mesosApp = _mesosFactory.Create(serviceName, serviceIdentifier, taskIdentifier);
+			IApplication mesosApp = _mesosFactory.Create(serviceName, taskIdentifier);
 			List<IApplication> applications = new List<IApplication> {mesosApp};
 
 			Mock<PrometheusCollector> prometheusCollectorMock =

@@ -46,9 +46,8 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		{
 			// Arrange
 			const string serviceName = "test-service";
-			const string serviceIdentifier = "test-service.mesos123";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
-			IApplication mesosApp = _mesosFactory.Create(serviceName, serviceIdentifier, taskIdentifier);
+			IApplication mesosApp = _mesosFactory.Create(serviceName, taskIdentifier);
 			HashSet<IApplication> applications = new HashSet<IApplication> {mesosApp};
 
 			CloudStackService cloudStackService = GenerateCloudStackService();
@@ -67,9 +66,8 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		{
 			// Arrange
 			const string serviceName = "test-service";
-			const string serviceIdentifier = "test-service.mesos123";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
-			IApplication mesosApp = _mesosFactory.Create(serviceName, serviceIdentifier, taskIdentifier);
+			IApplication mesosApp = _mesosFactory.Create(serviceName, taskIdentifier);
 
 			CloudStackService cloudStackService = GenerateCloudStackService();
 			cloudStackService.Applications = new HashSet<IApplication> {mesosApp};
@@ -91,9 +89,8 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		public void TestCloudStackMesosUpdateEventInstanceStaging()
 		{
 			const string serviceName = "test-service";
-			const string serviceIdentifier = "test-service.mesos123";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
-			IApplication mesosApp = _mesosFactory.Create(serviceName, serviceIdentifier, taskIdentifier);
+			IApplication mesosApp = _mesosFactory.Create(serviceName, taskIdentifier);
 
 			// Arrange
 			CloudStackService cloudStackService = GenerateCloudStackService();
@@ -117,9 +114,8 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		public void TestCloudStackMesosUpdateEventInstanceRemoved()
 		{
 			const string serviceName = "test-service";
-			const string serviceIdentifier = "test-service.mesos123";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
-			IApplication mesosApp = _mesosFactory.Create(serviceName, serviceIdentifier, taskIdentifier);
+			IApplication mesosApp = _mesosFactory.Create(serviceName, taskIdentifier);
 			IInstance mesosInstance = mesosApp.Instances.First();
 
 			// Arrange
@@ -146,9 +142,8 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		public void TestCloudStackMesosUpdateEventServiceAdded()
 		{
 			const string serviceName = "test-service";
-			const string serviceIdentifier = "test-service.mesos123";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
-			IApplication mesosApp = _mesosFactory.Create(serviceName, serviceIdentifier, taskIdentifier);
+			IApplication mesosApp = _mesosFactory.Create(serviceName, taskIdentifier);
 
 			// Arrange
 			CloudStackService cloudStackService = GenerateCloudStackService();
@@ -172,9 +167,8 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		public void TestCloudStackMesosUpdateEventServiceRemoved()
 		{
 			const string serviceName = "test-service";
-			const string serviceIdentifier = "test-service.mesos123";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
-			IApplication mesosApp = _mesosFactory.Create(serviceName, serviceIdentifier, taskIdentifier);
+			IApplication mesosApp = _mesosFactory.Create(serviceName, taskIdentifier);
 
 			// Arrange
 			CloudStackService cloudStackService = GenerateCloudStackService();

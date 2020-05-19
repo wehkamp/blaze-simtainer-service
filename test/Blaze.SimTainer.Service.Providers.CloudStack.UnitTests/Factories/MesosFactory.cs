@@ -16,8 +16,10 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Factories
 		/// This will also create an instance
 		/// </summary>
 		/// <param name="serviceName"></param>
+		/// <param name="taskIdentifier"></param>
+		/// <param name="instanceState"></param>
 		/// <returns></returns>
-		public IApplication Create(string serviceName, string serviceIdentifier, string taskIdentifier, InstanceState instanceState = InstanceState.Running)
+		public IApplication Create(string serviceName, string taskIdentifier, InstanceState instanceState = InstanceState.Running)
 		{
 			Random random = new Random();
 			IApplication application = new MesosApplication
@@ -49,7 +51,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Factories
 			for (int i = 0; i < amount; i++)
 			{
 				string identifier = i.ToString();
-				list.Add(Create(identifier,identifier,identifier));
+				list.Add(Create(identifier,identifier));
 			}
 
 			return list;
@@ -152,7 +154,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Factories
 					{
 						new MesosDockerPortMapping()
 						{
-							HostPort = 80
+							HostPort = port
 						}
 					}
 				}

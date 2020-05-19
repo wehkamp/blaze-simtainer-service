@@ -8,7 +8,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Factories
 {
 	internal class PrometheusFactory
 	{
-		private Random _randomNumber = new Random();
+		private readonly Random _randomNumber = new Random();
 
 		/// <summary>
 		/// This function will create  a prometheus result based on the given parameters. ContainerIdentifier and instance number are always random.
@@ -21,7 +21,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Factories
 		{
 			return validResults
 				? GenerateValidPrometheusResults(application, job)
-				: GenerateInvalidPrometheusResults(application);
+				: GenerateInvalidPrometheusResults();
 		}
 
 		/// <summary>
@@ -51,9 +51,8 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Factories
 		/// <summary>
 		/// Generate a list with invalid prometheus results. They contain information which you normally should not get.
 		/// </summary>
-		/// <param name="applicationMock"></param>
 		/// <returns></returns>
-		private PrometheusResult GenerateInvalidPrometheusResults(IApplication applicationMock)
+		private PrometheusResult GenerateInvalidPrometheusResults()
 		{
 			return new PrometheusResult
 			{

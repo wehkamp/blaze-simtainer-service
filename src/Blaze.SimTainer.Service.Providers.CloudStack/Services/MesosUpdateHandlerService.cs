@@ -86,7 +86,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 								});
 							break;
 						default:
-							Console.WriteLine($"Task not handled! {mesosEvent.UpdateTask.State.ToString()}");
+							Console.WriteLine($"Task not handled! {mesosEvent.UpdateTask.State}");
 							break;
 					}
 					break;
@@ -139,7 +139,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 		/// </summary>
 		/// <param name="mesosTask"></param>
 		/// <returns></returns>
-		private IApplication GenerateApplication(MesosTask mesosTask)
+		private static IApplication GenerateApplication(MesosTask mesosTask)
 		{
 			IApplication newApplication = new MesosApplication
 			{

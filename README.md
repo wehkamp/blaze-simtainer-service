@@ -232,4 +232,8 @@ There are unit tests written for the CloudStack provider project and the API pro
 
 ## 5. Developer note
 
-This project is my graduation project. If you have any questions, feedback or suggestions, feel free to contact me!
+This project is a graduation project. If you have any questions, feedback or suggestions, feel free to contact us (Harm Weites, Sebastiaan Bekker or Leroy van Dijk)!
+
+## 8. Icons
+
+Icons used in this project are from iconfinder.com created by DesignerzBase.

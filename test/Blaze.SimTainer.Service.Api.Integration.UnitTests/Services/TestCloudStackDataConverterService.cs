@@ -30,11 +30,10 @@ namespace Blaze.SimTainer.Service.Api.Integration.UnitTests.Services
 		{
 			// Arrange
 			const string serviceName = "test-service";
-			const string serviceIdentifier = "test-service.mesos123";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
 
 			CloudStackDataConverterService cloudStackDataConverterService = new CloudStackDataConverterService();
-			IApplication mesosApp = _mesosFactory.Create(serviceName, serviceIdentifier, taskIdentifier);
+			IApplication mesosApp = _mesosFactory.Create(serviceName, taskIdentifier);
 			List<IApplication> applications = new List<IApplication> { mesosApp };
 			PrometheusResult metricResult1 = _prometheusFactory.Create(mesosApp, taskIdentifier);
 
@@ -100,11 +99,10 @@ namespace Blaze.SimTainer.Service.Api.Integration.UnitTests.Services
 			// Arrange
 			CloudStackDataConverterService cloudStackDataConverterService = new CloudStackDataConverterService();
 			const string serviceName = "test-service";
-			const string serviceIdentifier = "test-service.mesos123";
 			string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
 
 			UpdateEvent updateEvent = new UpdateEvent();
-			IApplication application = _mesosFactory.Create(serviceName, serviceIdentifier, taskIdentifier);
+			IApplication application = _mesosFactory.Create(serviceName, taskIdentifier);
 
 			
 			updateEvent.Application = application;
@@ -123,11 +121,10 @@ namespace Blaze.SimTainer.Service.Api.Integration.UnitTests.Services
 			// Arrange
 			CloudStackDataConverterService cloudStackDataConverterService = new CloudStackDataConverterService();
 			const string serviceName = "test-service";
-			const string serviceIdentifier = "test-service.mesos123";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
 
 			UpdateEvent updateEvent = new UpdateEvent();
-			IApplication application = _mesosFactory.Create(serviceName, serviceIdentifier, taskIdentifier);
+			IApplication application = _mesosFactory.Create(serviceName, taskIdentifier);
 
 			updateEvent.Application = application;
 			updateEvent.ApplicationEventType = ApplicationEventType.ServiceAdded;
@@ -150,14 +147,13 @@ namespace Blaze.SimTainer.Service.Api.Integration.UnitTests.Services
 			// Arrange
 			CloudStackDataConverterService cloudStackDataConverterService = new CloudStackDataConverterService();
 			const string serviceName = "test-service";
-			const string serviceIdentifier = "test-service.mesos123";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
 			const string containerIdentifier = "test-service-container-1.test123";
 
 			UpdateEvent updateEvent = new UpdateEvent();
-			IApplication application = _mesosFactory.Create(serviceName, serviceIdentifier, taskIdentifier);
+			IApplication application = _mesosFactory.Create(serviceName, taskIdentifier);
 
-			IInstance instance = new MesosInstance(containerIdentifier, InstanceState.Staging, containerIdentifier);
+			IInstance instance = new MesosInstance(containerIdentifier, InstanceState.Staging, taskIdentifier);
 
 			updateEvent.Application = application;
 			updateEvent.Instance = instance;
@@ -167,8 +163,8 @@ namespace Blaze.SimTainer.Service.Api.Integration.UnitTests.Services
 			UpdateEventDto result = cloudStackDataConverterService.GenerateUpdateEvent(updateEvent);
 
 			// Assert
-			instance.State.Should().Be(InstanceState.Staging);
-			instance.Identifier.Should().Be(containerIdentifier);
+			result.AddedVisualizedObject.Type.Should().Be("staging-building");
+			result.AddedVisualizedObject.Identifier.Should().Be(taskIdentifier);
 		}
 	}
 }

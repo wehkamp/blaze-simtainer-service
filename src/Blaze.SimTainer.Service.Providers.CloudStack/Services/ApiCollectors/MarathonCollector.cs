@@ -16,18 +16,20 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 
 		public IList<MarathonApp> MarathonApps = new List<MarathonApp>();
 
-		private DateTime _lastPolling = DateTime.Now.AddMinutes(-30);
+		private DateTime _lastPolling;
+
 		public MarathonCollector(string baseUrl, HttpClient httpClient)
 		{
 			_baseUrl = baseUrl;
 			_httpClient = httpClient;
 			_httpClient.Timeout = TimeSpan.FromSeconds(10);
+			_lastPolling = DateTime.UtcNow.AddMinutes(-30);
 		}
 
 		public IList<MarathonApp> GetAllApplications()
 		{
 			HttpResponseMessage response = _httpClient.GetAsync(_baseUrl + "v2/apps").Result;
-			
+
 			if (!response.IsSuccessStatusCode) return new List<MarathonApp>();
 
 			HttpContent responseContent = response.Content;
@@ -52,7 +54,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 		public void PollData()
 		{
 			// Poll every 20 minutes
-			int result = DateTime.Compare(_lastPolling.AddMinutes(20), DateTime.Now);
+			int result = DateTime.Compare(_lastPolling.AddMinutes(20), DateTime.UtcNow);
 
 			if (result > 0) return;
 			MarathonApps = GetAllApplications();

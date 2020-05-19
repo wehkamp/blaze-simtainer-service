@@ -67,7 +67,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 						if (!app.Instances.Contains(eInstance))
 							app.Instances.Add(e.Instance);
 						else
-							UpdateInstance(app.Instances[app.Instances.IndexOf(e.Instance)], e.Instance, true);
+							UpdateInstance(app.Instances.Single(i => i.Equals(e.Instance)), e.Instance, true);
 					}
 
 					updateEvent.Application = app;
@@ -83,7 +83,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 						if (!app.Instances.Contains(e.Instance))
 							app.Instances.Add(e.Instance);
 						else
-							UpdateInstance(app.Instances[app.Instances.IndexOf(e.Instance)], e.Instance);
+							UpdateInstance(app.Instances.Single(i => i.Equals(e.Instance)), e.Instance);
 					}
 
 					updateEvent.Application = app;
@@ -139,7 +139,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 								instanceUpdates = true;
 							}
 							else
-								instanceUpdates = UpdateInstance(app.Instances[app.Instances.IndexOf(e.Instance)],
+								instanceUpdates = UpdateInstance(app.Instances.Single(i=>i.Equals(e.Instance)),
 									e.Instance);
 
 							updateEvent.Instance = app.Instances[app.Instances.IndexOf(e.Instance)];
@@ -326,6 +326,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 				if (newInstance1.ContainerIdentifier != oldInstance1.ContainerIdentifier)
 				{
 					oldInstance1.ContainerIdentifier = newInstance1.ContainerIdentifier;
+					updated = true;
 				}
 			}
 
