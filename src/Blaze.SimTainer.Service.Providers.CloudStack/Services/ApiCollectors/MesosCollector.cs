@@ -125,6 +125,8 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 						count++;
 					}
 			}
+			// Since we came to the end of the stream, set the started listening back to false
+			StartedListening = false;
 		}
 	}
 }
