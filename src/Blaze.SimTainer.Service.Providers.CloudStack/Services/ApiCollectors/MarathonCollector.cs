@@ -30,7 +30,11 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 		{
 			HttpResponseMessage response = _httpClient.GetAsync(_baseUrl + "v2/apps").Result;
 
-			if (!response.IsSuccessStatusCode) return new List<MarathonApp>();
+			if (!response.IsSuccessStatusCode)
+			{
+				Console.WriteLine($"[MarathonCollector] Invalid response! Status code: {response.StatusCode}");
+				return new List<MarathonApp>();
+			}
 
 			HttpContent responseContent = response.Content;
 
@@ -42,9 +46,9 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 				MarathonModel marathonData = JsonConvert.DeserializeObject<MarathonModel>(responseString);
 				return marathonData.Apps;
 			}
-			catch (Exception exception)
+			catch (Exception ex)
 			{
-				Debug.WriteLine(exception.Message);
+				Console.WriteLine($"[MarathonCollector] Exception occurred! {ex.Message}");
 			}
 
 			// Return empty list

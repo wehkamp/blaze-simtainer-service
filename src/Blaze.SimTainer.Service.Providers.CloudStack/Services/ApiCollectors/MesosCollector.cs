@@ -40,7 +40,6 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 				return;
 			}
 
-			Debug.WriteLine($"Getting all applications from: {_baseUrl}");
 			StartedListening = true;
 			string url = _baseUrl + "api/v1";
 			Uri uri;
@@ -50,9 +49,10 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 			}
 			catch (UriFormatException)
 			{
-				Debug.WriteLine("Invalid URL for the MesosCollector!");
+				Console.WriteLine("[MesosCollector] Invalid Base URL");
 				return;
 			}
+			Console.WriteLine("[MesosCollector] Starting to listen to Mesos Events");
 
 			const string content = "{\"type\":\"SUBSCRIBE\"}";
 			int count = 0;
@@ -111,20 +111,22 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 							}
 							catch (JsonException)
 							{
-								Debug.WriteLine("Invalid JSON received. Skipping.");
+								Debug.WriteLine("[MesosCollector] Invalid JSON received. Skipping.");
 							}
 							catch (ArgumentException e)
 							{
-								Debug.WriteLine($"Invalid event. Exception: {e.Message}.");
+								Debug.WriteLine($"[MesosCollector] Invalid event. Exception: {e.Message}.");
 							}
 							catch (NullReferenceException e)
 							{
-								Debug.WriteLine($"Invalid event. Probably missing a field. Exception: {e.Message}.");
+								Debug.WriteLine($"[MesosCollector] Invalid event. Probably missing a field. Exception: {e.Message}.");
 							}
 						}
 						count++;
 					}
 			}
+
+			Console.WriteLine("[MesosCollector] Mesos seems to be down. Ending stream.");
 			// Since we came to the end of the stream, set the started listening back to false
 			StartedListening = false;
 		}

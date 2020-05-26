@@ -216,7 +216,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine($"Something went wrong with the metrics collection {ex.Message}");
+				Console.WriteLine($"[CloudStackService] Exception occurred during metrics collection! {ex.Message}");
 			}
 		}
 

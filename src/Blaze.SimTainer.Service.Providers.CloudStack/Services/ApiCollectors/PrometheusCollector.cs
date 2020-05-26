@@ -122,12 +122,13 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 					PrometheusModel prometheusModel = JsonConvert.DeserializeObject<PrometheusModel>(responseString);
 					return prometheusModel.Data.Result;
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
+					Console.WriteLine($"[PrometheusCollector] Exception occurred! {ex.Message}");
 					return null;
 				}
 			}
-
+			Console.WriteLine($"[PrometheusCollector] Invalid response! Status code: {response.StatusCode}");
 			return null;
 		}
 
