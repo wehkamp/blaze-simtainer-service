@@ -99,7 +99,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 
 			if (_requiredGrafanaTags.Count > 0)
 			{
-				return grafanaDashboards.Where(x => !x.Tags.Except(_requiredGrafanaTags).Any())
+				return grafanaDashboards.Where(x => !_requiredGrafanaTags.Except(x.Tags).Any())
 					.FirstOrDefault(x => x.Title.IndexOf(id, StringComparison.OrdinalIgnoreCase) >= 0);
 			}
 			return grafanaDashboards.FirstOrDefault(x => x.Title.IndexOf(id, StringComparison.OrdinalIgnoreCase) >= 0);
