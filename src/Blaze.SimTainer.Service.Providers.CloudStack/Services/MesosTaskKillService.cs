@@ -8,12 +8,12 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 	/// <summary>
 	/// This service will handle task kills.
 	/// </summary>
-	internal class TaskKillService
+	internal class MesosTaskKillService
 	{
 		private readonly string _baseUrl;
 		private readonly HttpClient _httpClient;
 
-		public TaskKillService(string baseUrl, HttpClient httpClient)
+		public MesosTaskKillService(string baseUrl, HttpClient httpClient)
 		{
 			_baseUrl = baseUrl;
 			_httpClient = httpClient;

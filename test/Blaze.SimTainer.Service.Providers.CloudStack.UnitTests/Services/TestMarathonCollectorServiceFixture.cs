@@ -16,7 +16,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 	public class TestMarathonCollectorServiceFixture
 	{
 		[Fact]
-		public void TestMarathonCollectorWrongEndpoint()
+		public void TestInvalidEndpoint()
 		{
 			// Arrange
 			MarathonCollector marathonCollector = new MarathonCollector(string.Empty, new HttpClient());
@@ -29,7 +29,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		}
 
 		[Fact]
-		public void TestMarathonCollectorValidApplicationsListByJsonInput()
+		public void TestValidApplicationsListByJsonInput()
 		{
 			// Arrange
 			Mock<HttpMessageHandler> mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -56,7 +56,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		}
 
 		[Fact]
-		public void TestMarathonCollectorInvalidApplicationsListByJsonInput()
+		public void TestInvalidApplicationsListByJsonInput()
 		{
 			// Arrange
 			Mock<HttpMessageHandler> mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -80,7 +80,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		}
 
 		[Fact]
-		public void TestMarathonCollector500Error()
+		public void TestInternalServerErrorFromApi()
 		{
 			// Arrange
 			Mock<HttpMessageHandler> mockMessageHandler = new Mock<HttpMessageHandler>();

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace Blaze.SimTainer.Service.Api.Controllers
@@ -46,7 +47,9 @@ namespace Blaze.SimTainer.Service.Api.Controllers
 			if (_cacheAdapter.TryGetValue(typeof(GameDto).Name, out GameDto cacheEntry)) return cacheEntry;
 
 			// Key not in cache, so get data.
-			cacheEntry = _cloudStackDataTransformationService.GenerateGameDto(_cloudStackService.Applications.OrderBy(x=>x.Identifier).ToList());
+			cacheEntry =
+				_cloudStackDataTransformationService.GenerateGameDto(_cloudStackService.Applications
+					.OrderBy(x => x.Identifier).ToList());
 
 			// Set cache options.
 			MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions()
@@ -55,6 +58,39 @@ namespace Blaze.SimTainer.Service.Api.Controllers
 
 			// Save data in cache.
 			_cacheAdapter.Set(typeof(GameDto).Name, cacheEntry, cacheEntryOptions);
+
+			return cacheEntry;
+		}
+
+
+		/// <summary>
+		/// This function will return the dashboard url of a neighbourhood.
+		/// </summary>
+		/// <returns>The current game dto.</returns>
+		[HttpGet("game/url")]
+		[ResponseCache(VaryByHeader = "User-Agent", Duration = 60)]
+		[ProducesResponseType(typeof(NeighbourhoodUrlDto), StatusCodes.Status200OK)]
+		public ActionResult<NeighbourhoodUrlDto> GetDashboardUrResult([Required] string identifier)
+		{
+			// Look for cache key.
+			if (_cacheAdapter.TryGetValue(identifier, out NeighbourhoodUrlDto cacheEntry)) return cacheEntry;
+
+			string dashboardUrl = _cloudStackService.GetDashboardUrl(identifier);
+			if (dashboardUrl == null)
+			{
+				return NotFound();
+			}
+
+			// Key not in cache, so set the data.
+			cacheEntry = new NeighbourhoodUrlDto {Url = dashboardUrl};
+
+			// Set cache options.
+			MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions()
+				// Keep in cache for this time, reset time if accessed.
+				.SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
+
+			// Save data in cache.
+			_cacheAdapter.Set(identifier, cacheEntry, cacheEntryOptions);
 
 			return cacheEntry;
 		}
@@ -68,7 +104,7 @@ namespace Blaze.SimTainer.Service.Api.Controllers
 		[HttpDelete("game")]
 		[ResponseCache(VaryByHeader = "User-Agent", Duration = 60)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public ActionResult DeleteGameResult(string identifier, bool force = false)
+		public ActionResult DeleteGameResult([Required] string identifier, bool force = false)
 		{
 			if (identifier == null)
 				return BadRequest();

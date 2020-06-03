@@ -24,7 +24,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		}
 
 		[Fact]
-		public void TestCloudStackServiceException()
+		public void TestInvalidBaseUrl()
 		{
 			// Arrange
 			ApiOptions apiOptions = new ApiOptions
@@ -42,7 +42,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 
 
 		[Fact]
-		public void TestCloudStackServiceValidApplicationAndMetrics()
+		public void TestValidApplicationAndMetrics()
 		{
 			// Arrange
 			const string serviceName = "test-service";
@@ -62,7 +62,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		}
 
 		[Fact]
-		public void TestCloudStackMesosUpdateEventInstanceRunning()
+		public void TestMesosUpdateEventInstanceRunning()
 		{
 			// Arrange
 			const string serviceName = "test-service";
@@ -86,7 +86,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		}
 
 		[Fact]
-		public void TestCloudStackMesosUpdateEventInstanceStaging()
+		public void TestMesosUpdateEventInstanceStaging()
 		{
 			const string serviceName = "test-service";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
@@ -111,7 +111,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		}
 
 		[Fact]
-		public void TestCloudStackMesosUpdateEventInstanceRemoved()
+		public void TestUpdateEventInstanceRemoved()
 		{
 			const string serviceName = "test-service";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
@@ -139,7 +139,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 
 
 		[Fact]
-		public void TestCloudStackMesosUpdateEventServiceAdded()
+		public void TestMesosUpdateEventServiceAdded()
 		{
 			const string serviceName = "test-service";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";
@@ -164,7 +164,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		}
 
 		[Fact]
-		public void TestCloudStackMesosUpdateEventServiceRemoved()
+		public void TestMesosUpdateEventServiceRemoved()
 		{
 			const string serviceName = "test-service";
 			const string taskIdentifier = "0f8fad5b-d9cb-469f-a165-70867728950e";

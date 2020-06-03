@@ -77,7 +77,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 				mesosCollector.GetMetricList("sum(avg(service_process_memory_used_bytes)) by(role,instance)");
 
 			// Assert
-			result.Should().BeNull();
+			result.Should().BeEmpty();
 		}
 
 		[Fact]
@@ -102,7 +102,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 				mesosCollector.GetMetricList("sum(avg(service_process_memory_used_bytes)) by(role,instance)");
 
 			// Assert
-			result.Should().BeNull();
+			result.Should().BeEmpty();
 		}
 
 		[Fact]

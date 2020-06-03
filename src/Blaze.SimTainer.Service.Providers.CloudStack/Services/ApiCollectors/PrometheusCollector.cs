@@ -125,11 +125,12 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 				catch (Exception ex)
 				{
 					Console.WriteLine($"[PrometheusCollector] Exception occurred! {ex.Message}");
-					return null;
+					return new List<PrometheusResult>();
 				}
 			}
+
 			Console.WriteLine($"[PrometheusCollector] Invalid response! Status code: {response.StatusCode}");
-			return null;
+			return new List<PrometheusResult>();
 		}
 
 		private static double ConvertBytesToMegabytes(double bytes)

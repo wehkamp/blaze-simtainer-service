@@ -49,7 +49,21 @@ namespace Blaze.SimTainer.Service.Api.Integration.UnitTests.Controllers
 			// Assert
 			requestResult.StatusCode.Should().NotBe(HttpStatusCode.MethodNotAllowed);
 			requestResult.StatusCode.Should().NotBe(HttpStatusCode.NotFound);
+			requestResult.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
 		}
+
+
+		[Fact]
+		public void TestDeleteGameControllerExistsWithoutQueryParams()
+		{
+			// Arrange & Act
+			Task<HttpResponseMessage> result = Client.DeleteAsync("/v1/cloudstack/game");
+			HttpResponseMessage requestResult = result.Result;
+
+			// Assert
+			requestResult.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+		}
+
 
 		[Fact]
 		public void TestHubControllerExists()
@@ -61,6 +75,28 @@ namespace Blaze.SimTainer.Service.Api.Integration.UnitTests.Controllers
 			// Assert
 			requestResult.StatusCode.Should().NotBe(HttpStatusCode.MethodNotAllowed);
 			requestResult.StatusCode.Should().NotBe(HttpStatusCode.NotFound);
+		}
+
+		[Fact]
+		public void TestGetDashboardUrlWithQueryParams()
+		{
+			// Arrange & Act
+			Task<HttpResponseMessage> result = Client.GetAsync("/v1/cloudstack/game/url?identifier=test-test");
+			HttpResponseMessage requestResult = result.Result;
+
+			// Assert
+			requestResult.StatusCode.Should().Be(HttpStatusCode.NotFound);
+		}
+
+		[Fact]
+		public void TestGetDashboardUrlWithoutQueryParams()
+		{
+			// Arrange & Act
+			Task<HttpResponseMessage> result = Client.GetAsync("/v1/cloudstack/game/url");
+			HttpResponseMessage requestResult = result.Result;
+
+			// Assert
+			requestResult.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 		}
 
 		public void Dispose()

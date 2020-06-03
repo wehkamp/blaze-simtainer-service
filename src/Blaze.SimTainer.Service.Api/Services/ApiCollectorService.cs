@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Blaze.SimTainer.Service.Providers.Shared.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace Blaze.SimTainer.Service.Api.Services
 {
@@ -27,17 +28,19 @@ namespace Blaze.SimTainer.Service.Api.Services
 		private readonly CloudStackDataConverterService _cloudStackDataConverterService;
 		private readonly ILogger<ApiCollectorService> _logger;
 		private readonly IHubContext<CloudStackGameEventHub, IGameEventHub> _gameHubContext;
+		private readonly IOptions<ApiOptions> _apiOptions;
 		private Task _backgroundTask;
 		private readonly CancellationTokenSource _shutdown = new CancellationTokenSource();
 
 		public ApiCollectorService(ILogger<ApiCollectorService> logger, CloudStackService cloudStackService,
-			IHubContext<CloudStackGameEventHub, IGameEventHub> gameHubContext)
+			IHubContext<CloudStackGameEventHub, IGameEventHub> gameHubContext, IOptions<ApiOptions> apiOptions)
 		{
 			// Add provider to list of providers
 			_providers.Add(cloudStackService);
 			_cloudStackDataConverterService = new CloudStackDataConverterService();
 			_logger = logger;
 			_gameHubContext = gameHubContext;
+			_apiOptions = apiOptions;
 
 			// Attach to the update event of the cloud stack service
 			cloudStackService.UpdateEvent += CloudStackServiceOnUpdateEvent;
@@ -82,7 +85,7 @@ namespace Blaze.SimTainer.Service.Api.Services
 					provider.Poll();
 				}
 
-				await Task.Delay(TimeSpan.FromSeconds(30));
+				await Task.Delay(TimeSpan.FromSeconds(_apiOptions.Value.PollingSeconds));
 			}
 		}
 

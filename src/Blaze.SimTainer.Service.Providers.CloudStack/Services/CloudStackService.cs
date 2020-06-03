@@ -18,19 +18,23 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 	/// </summary>
 	public class CloudStackService : IProvider
 	{
-		public IApplicationProvider MesosCollector;
-		public IMetricProvider PrometheusCollector;
-		public IApplicationProvider MarathonCollector;
+		internal IApplicationProvider MesosCollector;
+		internal IMetricProvider PrometheusCollector;
+		internal IApplicationProvider MarathonCollector;
 		internal MesosUpdateHandlerService MesosUpdateHandlerService;
 		public HashSet<IApplication> Applications = new HashSet<IApplication>();
 		public event EventHandler<UpdateEvent> UpdateEvent;
-		internal TaskKillService TaskKillService;
+		internal MesosTaskKillService MesosTaskKillService;
+		internal GrafanaDashboardService GrafanaDashboardService;
 
 		public CloudStackService(IOptions<ApiOptions> apiOptions)
 		{
 			// Initialize services
 			MesosUpdateHandlerService = new MesosUpdateHandlerService();
-			TaskKillService = new TaskKillService(apiOptions.Value.MarathonEndpoint, new HttpClient());
+			MesosTaskKillService = new MesosTaskKillService(apiOptions.Value.MarathonEndpoint, new HttpClient());
+			GrafanaDashboardService = new GrafanaDashboardService(apiOptions.Value.GrafanaEndpoint, apiOptions.Value.ConsulEndpoint,
+				apiOptions.Value.RequiredGrafanaTags,
+				new HttpClient());
 
 			// Initialize collector services
 			MesosCollector = new MesosCollector(apiOptions.Value.MesosEndpoint, new HttpClient(),
@@ -139,7 +143,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 								instanceUpdates = true;
 							}
 							else
-								instanceUpdates = UpdateInstance(app.Instances.Single(i=>i.Equals(e.Instance)),
+								instanceUpdates = UpdateInstance(app.Instances.Single(i => i.Equals(e.Instance)),
 									e.Instance);
 
 							updateEvent.Instance = app.Instances[app.Instances.IndexOf(e.Instance)];
@@ -173,6 +177,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 					break;
 			}
 
+			Applications.RemoveWhere(application => application == null);
 			// Invoke event handlers
 			UpdateMetrics();
 			UpdateEvent?.Invoke(e, updateEvent);
@@ -183,8 +188,9 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 		/// </summary>
 		internal void UpdateMetrics()
 		{
-			foreach (IInstance instance in Applications.SelectMany(application => application.Instances)
-				.Where(instance => instance != null && instance.State == InstanceState.Running))
+			List<IInstance> runningInstances = Applications.SelectMany(application => application.Instances)
+				.Where(instance => instance != null && instance.State == InstanceState.Running).ToList();
+			foreach (IInstance instance in runningInstances)
 			{
 				// Fill metrics for every instance
 				instance.Metrics =
@@ -193,7 +199,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 		}
 
 		/// <summary>
-		/// This function will be called everytime the prometheus metrics are updated.
+		/// This function will be called every time the prometheus metrics are updated.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -360,7 +366,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 			if (target.Application.Instances.Count(x => x.State == InstanceState.Running) < 2 && !force) return false;
 
 
-			if (!TaskKillService.KillTask(target.Application, target.Instance)) return false;
+			if (!MesosTaskKillService.KillTask(target.Application, target.Instance)) return false;
 
 			// Quickly update the instance state to a state of unknown because we are not sure when it gets killed (task queue of mesos)
 			// Plus in case 2 requests happen and all containers get destroyed
@@ -375,6 +381,17 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 			target.Application.Instances.Remove(target.Instance);
 			UpdateEvent?.Invoke(null, updateEvent);
 			return true;
+		}
+
+		/// <summary>
+		/// Function to get the url of the Grafana dashboard of a service.
+		/// </summary>
+		/// <param name="serviceName"></param>
+		/// <returns></returns>
+		public string GetDashboardUrl(string serviceName)
+		{
+			IApplication targetApplication = Applications.SingleOrDefault(x => x.Name == serviceName);
+			return targetApplication == null ? null : GrafanaDashboardService.GetDashboard(targetApplication);
 		}
 	}
 }
