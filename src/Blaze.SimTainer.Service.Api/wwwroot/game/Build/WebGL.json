@@ -1,7 +1,7 @@
 {
 "companyName": "Wehkamp",
 "productName": "SimTainer",
-"productVersion": "0.4 beta 1",
+"productVersion": "0.5 beta 1",
 "dataUrl": "WebGL.data.unityweb",
 "wasmCodeUrl": "WebGL.wasm.code.unityweb",
 "wasmFrameworkUrl": "WebGL.wasm.framework.unityweb",
