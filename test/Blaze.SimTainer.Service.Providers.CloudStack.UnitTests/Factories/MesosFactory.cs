@@ -21,7 +21,6 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Factories
 		/// <returns></returns>
 		public IApplication Create(string serviceName, string taskIdentifier, InstanceState instanceState = InstanceState.Running)
 		{
-			Random random = new Random();
 			IApplication application = new MesosApplication
 			{
 				Name = serviceName,
@@ -166,7 +165,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Factories
 			List<MesosTask> tasks = new List<MesosTask>();
 			for (int i = 0; i < amount; i++)
 			{
-				tasks.Add(GenerateMesosTask($"{i}", "test-team", taskType));
+				tasks.Add(GenerateMesosTask($"task-{Guid.NewGuid()}", "test-team", taskType));
 			}
 			MesosSubscription mesosSubscription = new MesosSubscription
 			{

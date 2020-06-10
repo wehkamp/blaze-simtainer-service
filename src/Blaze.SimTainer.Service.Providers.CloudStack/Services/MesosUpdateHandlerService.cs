@@ -16,6 +16,21 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 		public event EventHandler<MesosUpdateEventArgs> MesosUpdateEvent;
 
 		/// <summary>
+		/// Property that is being set when this service should subscribe to a specific framework name.
+		/// </summary>
+		internal MesosFrameworkInfo SelectedFramework { get; set; }
+
+		/// <summary>
+		/// The actual name of the selected framework should be set, in case of framework updates (add, update or remove).
+		/// </summary>
+		internal string SelectedFrameworkName { get; set; }
+
+		public MesosUpdateHandlerService(string selectedFrameworkName)
+		{
+			SelectedFrameworkName = selectedFrameworkName;
+		}
+
+		/// <summary>
 		/// Function to handle updates that we receive from mesos <see cref="ApiCollectors.MesosCollector"/>
 		/// </summary>
 		/// <param name="mesosEvent"></param>
@@ -25,6 +40,14 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 			switch (mesosEvent.Type)
 			{
 				case MesosEventType.TASK_ADDED:
+					if (!string.IsNullOrEmpty(SelectedFrameworkName) &&
+					    (SelectedFramework == null || mesosEvent.AddTask.Task.FrameworkIdentifier.Value !=
+						    SelectedFramework.Identifier.Value))
+					{
+						// Unhandled event
+						return;
+					}
+
 					MesosUpdateEvent?.Invoke(this,
 						new MesosUpdateEventArgs
 						{
@@ -37,6 +60,14 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 						});
 					break;
 				case MesosEventType.TASK_UPDATED:
+					if (!string.IsNullOrEmpty(SelectedFrameworkName) &&
+					    (SelectedFramework == null || mesosEvent.UpdateTask.FrameworkIdentifier.Value !=
+						    SelectedFramework.Identifier.Value))
+					{
+						// Unhandled event
+						return;
+					}
+
 					switch (mesosEvent.UpdateTask.State)
 					{
 						// A lot of cases, but with all these cases, the instance should be removed
@@ -89,8 +120,60 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 							Console.WriteLine($"Task not handled! {mesosEvent.UpdateTask.State}");
 							break;
 					}
+
+					break;
+				case MesosEventType.FRAMEWORK_ADDED:
+					// Framework has probably been re-created with a new identifier. So set the new selected framework
+					if (!string.IsNullOrEmpty(SelectedFrameworkName) &&
+					    mesosEvent.AddFramework.FrameworkInfo.Name == SelectedFrameworkName)
+					{
+						Console.WriteLine(
+							$"[MesosUpdateHandlerService] Selected framework is added with identifier {mesosEvent.AddFramework.FrameworkInfo.Identifier.Value}");
+						SelectedFramework = mesosEvent.AddFramework.FrameworkInfo;
+					}
+
+					break;
+				case MesosEventType.FRAMEWORK_UPDATED:
+					if (!string.IsNullOrEmpty(SelectedFrameworkName) &&
+					    mesosEvent.UpdatedFramework.FrameworkInfo.Name == SelectedFrameworkName)
+					{
+						Console.WriteLine(
+							$"[MesosUpdateHandlerService] Selected framework is updated with identifier {mesosEvent.UpdatedFramework.FrameworkInfo.Identifier.Value}");
+						SelectedFramework = mesosEvent.UpdatedFramework.FrameworkInfo;
+					}
+
+					break;
+				case MesosEventType.FRAMEWORK_REMOVED:
+					if (string.IsNullOrEmpty(SelectedFrameworkName) &&
+					    mesosEvent.RemovedFramework.FrameworkInfo.Name == SelectedFrameworkName)
+					{
+						Console.WriteLine(
+							$"[MesosUpdateHandlerService] Selected framework is removed with identifier {mesosEvent.RemovedFramework.FrameworkInfo.Identifier.Value}");
+						SelectedFramework = null;
+					}
+
 					break;
 			}
+		}
+
+		/// <summary>
+		/// Function that should be used when a Mesos subscription is received to initialize the applications.
+		/// </summary>
+		/// <param name="mesosSubscription"></param>
+		internal void InitializeMesosSubscription(MesosSubscription mesosSubscription)
+		{
+			HashSet<IApplication> applications = ConvertMesosSubscriptions(mesosSubscription);
+
+
+			// Set the framework that is selected to listen to
+			if (!string.IsNullOrEmpty(SelectedFrameworkName))
+			{
+				SelectedFramework = mesosSubscription.MesosSubscribed.State.MesosGetFrameworks.Frameworks.Single(x =>
+					x.FrameworkInfo.Name == SelectedFrameworkName).FrameworkInfo;
+			}
+
+			MesosInitializationEvent?.Invoke(this,
+				new MesosInitializationEventArgs {Applications = applications});
 		}
 
 		/// <summary>
@@ -128,11 +211,9 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 				}
 			}
 
-			MesosInitializationEvent?.Invoke(this,
-				new MesosInitializationEventArgs { Applications = applications });
-
 			return applications;
 		}
+
 
 		/// <summary>
 		/// Function to generate an application based on a mesos task

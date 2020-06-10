@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Text.RegularExpressions;
 
 namespace Blaze.SimTainer.Service.Providers.CloudStack.Models.Apis.Mesos
 {
@@ -11,10 +12,15 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Models.Apis.Mesos
 		{
 			get
 			{
-				string[] val = Value.Split(".");
-				return val.Length == 2
-					? val[1]
-					: throw new ArgumentException($"Expected a task identifier. Value was actually: {Value}");
+				Match m = Regex.Match(Value, "[({]?[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}[})]?",
+					RegexOptions.IgnoreCase);
+
+				if (m.Success)
+				{
+					return m.Value;
+				}
+
+				throw new ArgumentException($"Expected a task identifier. Value was actually: {Value}");
 			}
 		}
 

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -84,7 +85,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 					{
 						string line = reader.ReadLine();
 
-						// First message is always the one with the current state of Mesos
+						// Second message is always the one with the current state of Mesos
 						if (count == 1)
 						{
 							// Remove some numbers from the end
@@ -94,7 +95,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services.ApiCollectors
 							// Deserialize the object and put it in the application service
 							MesosSubscription mesosSubscription =
 								JsonConvert.DeserializeObject<MesosSubscription>(line);
-							_mesosUpdateHandlerService.ConvertMesosSubscriptions(mesosSubscription);
+							_mesosUpdateHandlerService.InitializeMesosSubscription(mesosSubscription);
 						}
 						else if (count > 1)
 						{

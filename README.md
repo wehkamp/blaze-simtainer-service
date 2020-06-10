@@ -17,6 +17,8 @@ You can also download the latest release from the releases tab and run the execu
 
 Mesos is the only mandatory application to let this application work for now, if you leave Marathon or the Prometheus endpoint blank, the building sizes and layers are not functioning as supposed to be, but the game will still work.
 
+Leave the Mesos Framework empty if you want to listen to all frameworks that exists in Mesos.
+
 ### 1.2. Swagger
 
 This application uses Swagger for API documentation.
@@ -234,6 +236,6 @@ There are unit tests written for the CloudStack provider project and the API pro
 
 This project is a graduation project. If you have any questions, feedback or suggestions, feel free to contact us (Harm Weites, Sebastiaan Bekker or Leroy van Dijk)!
 
-## 8. Icons
+## 6. Icons
 
 Icons used in this project are from iconfinder.com created by DesignerzBase.

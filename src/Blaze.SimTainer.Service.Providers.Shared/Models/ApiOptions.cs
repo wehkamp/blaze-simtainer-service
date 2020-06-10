@@ -6,6 +6,7 @@ namespace Blaze.SimTainer.Service.Providers.Shared.Models
 	{
 		public string PrometheusEndpoint { get; set; }
 		public string MesosEndpoint { get; set; }
+		public string MesosFramework { get; set; }
 		public string MarathonEndpoint { get; set; }
 		public string ConsulEndpoint { get; set; }
 		public string GrafanaEndpoint { get; set; }

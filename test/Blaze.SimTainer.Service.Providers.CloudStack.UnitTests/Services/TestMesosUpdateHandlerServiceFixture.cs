@@ -11,7 +11,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 {
 	public class TestMesosUpdateHandlerServiceFixture
 	{
-		private MesosFactory _mesosFactory;
+		private readonly MesosFactory _mesosFactory;
 
 		public TestMesosUpdateHandlerServiceFixture()
 		{
@@ -22,7 +22,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		public void TestUpdateHandler()
 		{
 			// Arrange
-			MesosUpdateHandlerService mesosUpdateHandlerService = new MesosUpdateHandlerService();
+			MesosUpdateHandlerService mesosUpdateHandlerService = new MesosUpdateHandlerService("marathon");
 
 			mesosUpdateHandlerService.HandleUpdates(new MesosEvent
 			{
@@ -37,7 +37,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 		public void TestMesosSubcriptionConverter()
 		{
 			// Arrange
-			MesosUpdateHandlerService mesosUpdateHandlerService = new MesosUpdateHandlerService();
+			MesosUpdateHandlerService mesosUpdateHandlerService = new MesosUpdateHandlerService("marathon");
 
 			MesosSubscription mesosSubscription = _mesosFactory.GenerateMesosSubscription(2, MesosTaskType.TASK_RUNNING);
 

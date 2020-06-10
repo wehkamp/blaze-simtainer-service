@@ -30,7 +30,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 		public CloudStackService(IOptions<ApiOptions> apiOptions)
 		{
 			// Initialize services
-			MesosUpdateHandlerService = new MesosUpdateHandlerService();
+			MesosUpdateHandlerService = new MesosUpdateHandlerService(apiOptions.Value.MesosFramework);
 			MesosTaskKillService = new MesosTaskKillService(apiOptions.Value.MarathonEndpoint, new HttpClient());
 			GrafanaDashboardService = new GrafanaDashboardService(apiOptions.Value.GrafanaEndpoint, apiOptions.Value.ConsulEndpoint,
 				apiOptions.Value.RequiredGrafanaTags,

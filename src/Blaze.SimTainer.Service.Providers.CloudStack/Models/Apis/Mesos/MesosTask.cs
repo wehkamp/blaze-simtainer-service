@@ -7,6 +7,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Models.Apis.Mesos
 	internal class MesosTask
 	{
 		[JsonProperty("task_id")] public MesosTaskIdentifier Identifier { get; set; }
+		[JsonProperty("framework_id")] public MesosFrameworkIdentifier FrameworkIdentifier { get; set; }
 		[JsonProperty("name")] public string Name { get; set; }
 
 		[JsonConverter(typeof(StringEnumConverter))]
