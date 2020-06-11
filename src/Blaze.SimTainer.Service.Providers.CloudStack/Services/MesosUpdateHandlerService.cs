@@ -144,7 +144,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 
 					break;
 				case MesosEventType.FRAMEWORK_REMOVED:
-					if (string.IsNullOrEmpty(SelectedFrameworkName) &&
+					if (!string.IsNullOrEmpty(SelectedFrameworkName) &&
 					    mesosEvent.RemovedFramework.FrameworkInfo.Name == SelectedFrameworkName)
 					{
 						Console.WriteLine(
