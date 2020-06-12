@@ -2,6 +2,7 @@
 using Blaze.SimTainer.Service.Providers.Shared.Interfaces;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Blaze.SimTainer.Service.Providers.CloudStack.Models.Apis;
 
 namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 {
@@ -28,7 +29,16 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 		/// <returns></returns>
 		public bool KillTask(IApplication application, IInstance instance)
 		{
-			string url = $"{_baseUrl}v2/apps/{application.Name}/tasks/{application.Name}.{instance.Identifier}";
+			string url;
+			if (instance is MesosInstance mesosInstance)
+			{
+				url = $"{_baseUrl}v2/apps/{application.Name}/tasks/{mesosInstance.TaskName}";
+			}
+			else
+			{
+				url = $"{_baseUrl}v2/apps/{application.Name}/tasks/{application.Name}.{instance.Identifier}";
+			}
+
 			Task<HttpResponseMessage> request = _httpClient.DeleteAsync(url);
 			HttpResponseMessage result = request.Result;
 			return result.IsSuccessStatusCode;

@@ -75,7 +75,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 			// Act
 			Action act = () => cloudStackService.OnMesosUpdateEvent(null, new MesosUpdateEventArgs
 			{
-				Instance = new MesosInstance("123", InstanceState.Running, "123", "127.0.01", 80),
+				Instance = new MesosInstance("123", InstanceState.Running, "123", "123", "127.0.01", 80),
 				Application = mesosApp,
 				EventTypeType = ApplicationEventType.InstanceRunning,
 				Identifier = "123"
@@ -100,7 +100,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 			Action act = () =>
 				cloudStackService.OnMesosUpdateEvent(null, new MesosUpdateEventArgs
 				{
-					Instance = new MesosInstance("123", InstanceState.Staging, "123", "127.0.01", 80),
+					Instance = new MesosInstance("123", InstanceState.Staging, "123", "123", "127.0.01", 80),
 					Application = mesosApp,
 					EventTypeType = ApplicationEventType.InstanceStaging,
 					Identifier = "123"
@@ -208,7 +208,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Services
 			List<IMetric> metrics = new List<IMetric>();
 			const string containerIdentifier = "blaze-test-container";
 			IMetric metric = new Metric();
-			IInstance instance = new MesosInstance(containerIdentifier, InstanceState.Running, containerIdentifier);
+			IInstance instance = new MesosInstance(containerIdentifier, InstanceState.Running, containerIdentifier, containerIdentifier);
 			metric.Values.Add("cpu_percentage", 1.0f);
 			metrics.Add(metric);
 			mesosCollectorMock.Setup(x => x.PollData());

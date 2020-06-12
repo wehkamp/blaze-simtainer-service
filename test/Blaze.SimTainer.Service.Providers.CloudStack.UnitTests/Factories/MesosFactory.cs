@@ -27,7 +27,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.UnitTests.Factories
 				// Example identifier: test-service.mesos-29323823
 				Identifier = taskIdentifier,
 				Instances = new List<IInstance>
-					{{new MesosInstance(taskIdentifier, instanceState, taskIdentifier, "127.0.0.1", 80)}},
+					{{new MesosInstance(taskIdentifier, instanceState, taskIdentifier, taskIdentifier, "127.0.0.1", 80)}},
 				Type = "mesos",
 				Role = null,
 				Memory = 500,

@@ -40,6 +40,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 			switch (mesosEvent.Type)
 			{
 				case MesosEventType.TASK_ADDED:
+
 					if (!string.IsNullOrEmpty(SelectedFrameworkName) &&
 					    (SelectedFramework == null || mesosEvent.AddTask.Task.FrameworkIdentifier.Value !=
 						    SelectedFramework.Identifier.Value))
@@ -48,15 +49,16 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 						return;
 					}
 
+					MesosTask mesosTask = mesosEvent.AddTask.Task;
 					MesosUpdateEvent?.Invoke(this,
 						new MesosUpdateEventArgs
 						{
-							Application = GenerateApplication(mesosEvent.AddTask.Task),
-							Identifier = mesosEvent.AddTask.Task.Name,
+							Application = GenerateApplication(mesosTask),
+							Identifier = mesosTask.Name,
 							EventTypeType = ApplicationEventType.ServiceAdded,
-							Instance = new MesosInstance(mesosEvent.AddTask.Task.Identifier.TaskIdentifier,
-								InstanceState.Unknown, mesosEvent.AddTask.Task.Identifier.TaskIdentifier,
-								null, mesosEvent.AddTask.Task.Container.DockerContainer.HostPort)
+							Instance = new MesosInstance(mesosTask.Identifier.TaskIdentifier,
+								InstanceState.Unknown, mesosTask.Identifier.TaskIdentifier,
+								mesosTask.Identifier.Value, null, mesosTask.Container.DockerContainer.HostPort)
 						});
 					break;
 				case MesosEventType.TASK_UPDATED:
@@ -67,7 +69,6 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 						// Unhandled event
 						return;
 					}
-
 					switch (mesosEvent.UpdateTask.State)
 					{
 						// A lot of cases, but with all these cases, the instance should be removed
@@ -98,6 +99,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 										mesosEvent.UpdateTask.Status.MesosTaskIdentifier.TaskIdentifier,
 										InstanceState.Staging,
 										mesosEvent.UpdateTask.Status.MesosTaskIdentifier.TaskIdentifier,
+										mesosEvent.UpdateTask.Status.MesosTaskIdentifier.Value,
 										mesosEvent.UpdateTask.Status.ContainerStatus.IpAddress),
 									Identifier = mesosEvent.UpdateTask.Status.MesosTaskIdentifier.ServiceName,
 									EventTypeType = ApplicationEventType.InstanceStaging
@@ -111,6 +113,7 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 										mesosEvent.UpdateTask.Status.ContainerStatus.ContainerId,
 										InstanceState.Running,
 										mesosEvent.UpdateTask.Status.MesosTaskIdentifier.TaskIdentifier,
+										mesosEvent.UpdateTask.Status.MesosTaskIdentifier.Value,
 										mesosEvent.UpdateTask.Status.ContainerStatus.IpAddress),
 									Identifier = mesosEvent.UpdateTask.Status.MesosTaskIdentifier.ServiceName,
 									EventTypeType = ApplicationEventType.InstanceRunning
@@ -207,7 +210,8 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 				{
 					newApplication.Instances.Add(new MesosInstance(mesosStatus.ContainerStatus.ContainerId,
 						mesosStatus.InstanceState, mesosStatus.MesosTaskIdentifier.TaskIdentifier,
-						ipAddress, mesosTask.Container.DockerContainer.HostPort));
+						mesosStatus.MesosTaskIdentifier.Value, ipAddress,
+						mesosTask.Container.DockerContainer.HostPort));
 				}
 			}
 

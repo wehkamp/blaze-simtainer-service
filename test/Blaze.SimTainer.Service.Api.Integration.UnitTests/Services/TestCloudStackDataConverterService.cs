@@ -153,7 +153,7 @@ namespace Blaze.SimTainer.Service.Api.Integration.UnitTests.Services
 			UpdateEvent updateEvent = new UpdateEvent();
 			IApplication application = _mesosFactory.Create(serviceName, taskIdentifier);
 
-			IInstance instance = new MesosInstance(containerIdentifier, InstanceState.Staging, taskIdentifier);
+			IInstance instance = new MesosInstance(containerIdentifier, InstanceState.Staging, taskIdentifier, taskIdentifier);
 
 			updateEvent.Application = application;
 			updateEvent.Instance = instance;

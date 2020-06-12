@@ -65,7 +65,10 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 					app = Applications.SingleOrDefault(x => x.Name == e.Identifier);
 					MesosInstance eInstance = (MesosInstance) e.Instance;
 					if (app == null)
-						Debug.WriteLine("Application is null, which should never happen.");
+					{
+						Console.WriteLine($"[CloudStackService] App {e.Identifier} does not exists when staging!");
+						return;
+					}
 					else
 					{
 						if (!app.Instances.Contains(eInstance))
@@ -81,7 +84,10 @@ namespace Blaze.SimTainer.Service.Providers.CloudStack.Services
 					app = Applications.SingleOrDefault(x => x.Name == e.Identifier);
 
 					if (app == null)
-						Debug.WriteLine("This should not happen. App does not exists");
+					{
+						Console.WriteLine($"[CloudStackService] App {e.Identifier} does not exists when running!");
+						return;
+					}
 					else
 					{
 						if (!app.Instances.Contains(e.Instance))
