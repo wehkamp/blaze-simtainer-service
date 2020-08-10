@@ -6,7 +6,7 @@ from blazecli.project.project import build_in_docker
 from blazecli.util.naming import image_name
 from blazecli.util.docker import environment_params
 
-build_image = "wehkamp/build-aspnetcore:3.1"
+build_image = "234348545939.dkr.ecr.eu-west-1.amazonaws.com/wehkamp/build-aspnetcore:3.1"
 name = 'Blaze.SimTainer.Service.Api'
 
 log.info("About to build .NET application '%s'" % name)
